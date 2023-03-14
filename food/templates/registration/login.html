@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% load crispy_forms_tags %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -51,18 +52,18 @@
                     <h2 class="text-center"><strong>Авторизация</strong></h2>
                 </div>
                 <div class="card px-5 py-3 d-flex align-items-center foodplan__shadow">
-                    <form>
+                    <form method="post", action="{% url 'login' %}">
+                        {% csrf_token %}
                         <h1 class="mb-4 text-center"><strong>Вход</strong></h1>
                         <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                            {{ form.username|as_crispy_field }}
                         </div>
                         <div class="mb-3">
                             <div class="d-flex align-items-center justify-content-between">
-                                <label for="exampleInputPassword1" class="form-label">Пароль</label>
-                                <small><a href="{% url 'password_reset' %}" class="link-dark foodplan_green">Забыли пароль?</a></small>
+                                <label for="exampleInputPassword1" class="form-label"></label>
+                                <small><a href="" class="link-dark foodplan_green">Забыли пароль?</a></small>
                             </div>
-                            <input type="password" class="form-control" id="password">
+                            {{ form.password|as_crispy_field }}
                         </div>
                         <div class="row mb-3">
                             <div class="col-12 col-sm-6 mt-3">
