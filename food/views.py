@@ -39,7 +39,7 @@ def order(request):
 
 
 def payment(request):
-    return render(request, 'payment.html')
+    return render(request, 'stub.html')
 
 
 def detailprofile(request):
