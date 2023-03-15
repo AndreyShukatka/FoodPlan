@@ -46,14 +46,12 @@ def detailprofile(request):
     users = User.objects.all()
     if request.method == 'POST':
         email = request.POST.get('email')
-        if users.filter(email=email):
+        if users.filter(email=email) and not users.filter(id=request.user.id, email=email):
             form = UserProfileForm(instance=request.user)
-            return render(request, 'lk.html',{'form' : form,'error_email': 'Такой email уже существует!'})
+            return render(request, 'lk.html', {'form': form, 'error_email': 'Такой email уже существует!'})
         form = UserProfileForm(instance=request.user, data=request.POST)
         if form.is_valid():
-            ins = form.save()
-            ins.email
-            print(email)
+            form.save()
             return redirect('lk')
         else:
             print(form.errors)
