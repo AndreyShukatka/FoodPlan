@@ -13,16 +13,43 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-light fixed-top navbar__opacity">
+        <nav class="navbar navbar-expand-md navbar-light fixed-top navbar__opacity">
             <div class="container">
                 <a class="navbar-brand" href="{% url 'index' %}">
                     <img src="{% static 'img/logo.8d8f24edbb5f.svg' %}" height="55" width="189" alt="">
                 </a>
-                <form action="{% url 'login' %}">
-                  <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
-                    Войти
-                  </button>
-                </form>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse1"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse1">
+                    <ul class="navbar-nav w-100">
+                        {% if user.is_authenticated %}
+                            <form class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end" action="{% url 'order' %}">
+                            <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Подписка</button>
+                            </form>
+                            <form action="{% url 'lk' %}">
+                              <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
+                                  {{ user.username }}
+                              </button>
+                            </form>
+                            <form action="{% url 'logout' %}">
+                              <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
+                                  Выход
+                              </button>
+                            </form>
+                        {% else %}
+                            <form class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end" action="{% url 'registration' %}">
+                            <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Регистрация</button>
+                            </form>
+                            <form action="{% url 'login' %}">
+                              <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
+                                 Войти
+                              </button>
+                            </form>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>

@@ -32,3 +32,9 @@ def registrated(request):
     else:
         form = RegisterUserForm(request.POST)
     return render(request, 'registration.html', context={'form': form})
+
+def personal_area(request):
+    return render(request, "lk.html")
+
+def order(request):
+    return render(request, "order.html")
