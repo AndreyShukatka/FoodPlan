@@ -107,7 +107,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def __str__(self):
-        return f'{self.user} - {self.subscription.period}'
+        return f'{self.user} - {self.period}'
 
 
 class Ingredient(models.Model):
