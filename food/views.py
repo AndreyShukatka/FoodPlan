@@ -1,9 +1,12 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib import messages
-from .forms import RegisterUserForm, UserProfileForm
-from django.views.generic import UpdateView
+from .forms import RegisterUserForm, UserProfileForm, UserPasswordChangeForm
+from django.urls import reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.views import PasswordChangeView
+
 
 
 def index(request):
@@ -58,3 +61,20 @@ def detailprofile(request):
     else:
         form = UserProfileForm(instance=request.user)
     return render(request, 'lk.html', {'form': form})
+
+class UserPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
+    """
+    Изменение пароля пользователя
+    """
+    form_class = UserPasswordChangeForm
+    template_name = 'change_password.html'
+    success_message = 'Ваш пароль был успешно изменён!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Изменение пароля на сайте'
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('lk')
+
