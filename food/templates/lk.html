@@ -100,26 +100,18 @@
                                     <div class="col-10 col-md-10">
                                         <div class="row">
                                             <div class="col-12">
-                                                <h2>Название подписки</h2>
+                                                <h2>Подписка на период {{ details.subscription_period }}</h2>
                                             </div>
                                             <div class="col-md-12 col-lg-9">
-                                                <h6>Описание подписки Lorem ipsum dolor sit, amet consectetur
-                                                    adipisicing elit. Eius saepe ea nobis necessitatibus
-                                                    consectetur rem! Eligendi assumenda facere sint quibusdam dolorem
-                                                    quasi doloribus nemo, temporibus molestiae
-                                                    distinctio cum laboriosam sed. Lorem ipsum dolor sit, amet
-                                                    consectetur adipisicing elit. Eius saepe ea nobis
-                                                    necessitatibus consectetur rem! Eligendi
-                                                    assumenda facere sint quibusdam dolorem quasi doloribus nemo,
-                                                    temporibus molestiae distinctio cum laboriosam
-                                                    sed.</h6>
+                                                <h6>
+                                                    <p>Подписка оплачена {{ details.payment_date }}</p>
+                                                    <p>Срок действия {{ details.subscription_period }}</p>
+                                                    <p>Заканчивается {{ details.end_date }}</p>
+                                                </h6>
                                             </div>
                                             <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
                                                 <div class="d-flex flex-row justify-content-between">
-                                                    <small>Персоны: </small><small>3</small>
-                                                </div>
-                                                <div class="d-flex flex-row justify-content-between">
-                                                    <small>Аллергии: </small><small>нет</small>
+                                                    <small>Персоны: </small><small>{{ details.person_count }}</small>
                                                 </div>
                                                 <div class="d-flex flex-row justify-content-between">
                                                     <small>Калории: </small><small>1400</small>

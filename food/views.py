@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .models import Subscription
+from .models import Order
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from .forms import RegisterUserForm, UserProfileForm, UserPasswordChangeForm
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.views import PasswordChangeView
-
+import datetime
 
 
 def index(request):
@@ -65,7 +65,29 @@ def detailprofile(request):
             print(form.errors)
     else:
         form = UserProfileForm(instance=request.user)
-    return render(request, 'lk.html', {'form': form})
+    return render(request, 'lk.html', {'form': form, 'details': get_detail_order(request)})
+
+def get_detail_order(request):
+    order = Order.objects.get(user=request.user)
+    subscription_period = order.subscription.get_period_display
+    subscription_price = order.subscription.price
+    paid = order.paid
+    payment_date = order.payment_date
+    end_date = payment_date + datetime.timedelta(days=30 * int(order.subscription.period))
+    menu_type = order.menu_type
+    category = order.category ## Может быть несколько
+    person_count = order.person_count
+    detail_order = {
+        'subscription_period': subscription_period,
+        'subscription_price': subscription_price,
+        'paid': paid,
+        'payment_date': payment_date,
+        'end_date' : end_date,
+        'menu_type': menu_type,
+        'category': category,
+        'person_count': person_count,
+    }
+    return detail_order
 
 class UserPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
     """
