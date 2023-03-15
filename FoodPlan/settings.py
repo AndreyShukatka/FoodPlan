@@ -72,6 +72,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'FoodPlan.wsgi.application'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'food.emailbackend.CustomBackend'
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
