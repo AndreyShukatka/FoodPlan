@@ -58,22 +58,6 @@ class Category(models.Model):
         return self.name
 
 
-class Allergy(models.Model):
-    name = models.CharField(
-        'Название',
-        db_index=True,
-        max_length=200,
-        unique=True
-    )
-
-    class Meta:
-        verbose_name = 'Аллергия'
-        verbose_name_plural = 'Аллергии'
-
-    def __str__(self):
-        return self.name
-
-
 class Order(models.Model):
     user = models.ForeignKey(
         User,
@@ -117,11 +101,6 @@ class Order(models.Model):
             MaxValueValidator(6)
         ]
     )
-    allergy = models.ManyToManyField(
-        Allergy,
-        verbose_name='Аллергии',
-        related_name='orders'
-    )
 
     class Meta:
         verbose_name = 'Заказ'
@@ -155,6 +134,10 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
+    free = models.BooleanField(
+        'Бесплатный',
+        default=False
+    )
     name = models.CharField(
         'Название',
         max_length=100,
@@ -181,11 +164,6 @@ class Recipe(models.Model):
     category = models.ManyToManyField(
         Category,
         verbose_name='Категория',
-        related_name='recipes'
-    )
-    allergy = models.ManyToManyField(
-        Allergy,
-        verbose_name='Аллергии',
         related_name='recipes'
     )
     ingredient = models.ManyToManyField(
