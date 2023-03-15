@@ -193,9 +193,10 @@
                         <h4>Открывайте меню в мобильном приложении, на компьютере, планшете, или распечатывайте на принтере.</h4>
                         <h4>Создавайте свою личную коллекцию избранных рецептов.</h4>
                         <div class="d-block py-5">
-                            <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green me-2 mb-2">Загрузите в App
+                            <form action="{% url 'stub' %}" id="strub"></form>
+                            <button form="strub" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green me-2 mb-2">Загрузите в App
                                 Store</button>
-                            <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green me-2 mb-2">Загрузите в Google
+                            <button form="strub" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green me-2 mb-2">Загрузите в Google
                                 Play</button>
                         </div>
                     </div>
@@ -207,7 +208,9 @@
             <div class="container mb-5">
                 <div class="row">
                     <div class="col-12 col-sm-4">
-                        <div class="foodplan__creator pounded-pill" style="height: 300px;"></div>
+                        <div class="foodplan__creator pounded-pill" style="height: 300px;">
+                            <img src="{% static 'img/avatar.jpg' %}" class="d-block w-100" alt="...">
+                        </div>
                         <h5 class="text-center">Марина Амельченко</h5>
                         <h6 class="text-center">Основатель Foodplan</h6>
                     </div>
