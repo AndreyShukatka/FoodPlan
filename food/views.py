@@ -1,14 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib import messages
-from .forms import RegisterUserForm
-from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
+from .forms import RegisterUserForm, UserProfileForm
+from django.views.generic import UpdateView
 
 
 def index(request):
     return render(request, "index.html")
+
 
 def registrated(request):
     form = {}
@@ -33,8 +33,6 @@ def registrated(request):
         form = RegisterUserForm(request.POST)
     return render(request, 'registration.html', context={'form': form})
 
-def personal_area(request):
-    return render(request, "lk.html")
 
 def order(request):
     return render(request, "order.html")
@@ -42,3 +40,23 @@ def order(request):
 
 def payment(request):
     return render(request, 'payment.html')
+
+
+def detailprofile(request):
+    users = User.objects.all()
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if users.filter(email=email):
+            form = UserProfileForm(instance=request.user)
+            return render(request, 'lk.html',{'form' : form,'error_email': 'Такой email уже существует!'})
+        form = UserProfileForm(instance=request.user, data=request.POST)
+        if form.is_valid():
+            ins = form.save()
+            ins.email
+            print(email)
+            return redirect('lk')
+        else:
+            print(form.errors)
+    else:
+        form = UserProfileForm(instance=request.user)
+    return render(request, 'lk.html', {'form': form})

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{{% extends 'base.html' %}
 {% load static %}
 {% block content %}
     <main style="margin-top: calc(2rem + 85px);">
@@ -11,106 +11,125 @@
                         </h4>
                         <h2 class="text-center"><strong>Личный кабинет</strong></h2>
                     </div>
-                    
+
                     <div class="card col-12 col-md-2 p-3 mb-3 d-flex flex-column align-items-center foodplan__shadow">
                         <div class="position-relative">
-                            <img src="{% static 'img/test_avatar.png' %}" alt="" width="100" height="100" class="rounded-pill">
-                            <span class="badge rounded-circle position-absolute bottom-0 end-0 foodplan__bg_green avatar__plus"><a href="#"
+                            <img src="{% static 'img/test_avatar.png' %}" alt="" width="100" height="100"
+                                 class="rounded-pill">
+                            <span class="badge rounded-circle position-absolute bottom-0 end-0 foodplan__bg_green avatar__plus"><a
+                                    href="#"
                                     class="link-dark text-decoration-none align-middle">+</a></span>
                         </div>
                         <h3 class="card-title text-center">{{ user.username }}</h3>
                         <div class="d-block">
                             <form action="{% url 'logout' %}">
-                                <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green">Выйти</button>
+                                <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green">
+                                    Выйти
+                                </button>
                             </form>
                         </div>
                     </div>
 
                     <div class="card col-12 col-md-10 p-3 mb-3 foodplan__shadow">
-                            <ul class="nav nav-tabs">
-                                <li class="nav-item foodplan__tab-item">
-                                    <button id="tab1" class="btn shadow-none foodplan__tab-button active" data-bs-toggle="tab" data-bs-target="#data">Персональные данные</button>
-                                </li>
-                                <li class="nav-item foodplan__tab-item">
-                                    <button id="tab2" class="btn shadow-none foodplan__tab-button" data-bs-toggle="tab" data-bs-target="#menu">Моё меню</button>
-                                </li>
-                                <li class="nav-item foodplan__tab-item flex-grow-1"></li>
-                            </ul>
-                            <div class="tab-content mt-2">
-                                <div class="tab-pane fade show active" id="data">
-                                    <form action="">
-                                        <div class="mb-3">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <label for="exampleInputEmail1" class="form-label">Имя</label>
-                                                <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item foodplan__tab-item">
+                                <button id="tab1" class="btn shadow-none foodplan__tab-button active"
+                                        data-bs-toggle="tab" data-bs-target="#data">Персональные данные
+                                </button>
+                            </li>
+                            <li class="nav-item foodplan__tab-item">
+                                <button id="tab2" class="btn shadow-none foodplan__tab-button" data-bs-toggle="tab"
+                                        data-bs-target="#menu">Моё меню
+                                </button>
+                            </li>
+                            <li class="nav-item foodplan__tab-item flex-grow-1"></li>
+                        </ul>
+                        <div class="tab-content mt-2">
+                            <div class="tab-pane fade show active" id="data">
+                                <form method="post" action="{% url 'lk' %}">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <label for="{{ form.first_name.id_for_label }}"
+                                                   class="form-label">Имя</label>
+                                            <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
+                                        </div>
+                                        {{ form.first_name }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                                        {{ form.email }}
+                                        {% if error_email %}
+                                            <p style="color: red">{{ error_email }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <label for="exampleInputPassword1" class="form-label">Пароль</label>
+                                            <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
+                                        </div>
+                                        {{ form.password1 }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleInputPassword1" class="form-label">Подтверждение
+                                            пароля</label>
+                                        {{ form.password1 }}
+                                    </div>
+                                    <div class="d-block">
+                                        <button type="submit"
+                                                class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
+                                            Сохранить
+                                            изменения
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="menu">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
+                                    </div>
+                                    <div class="col-10 col-md-10">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h2>Название подписки</h2>
                                             </div>
-                                        
-                                            <input type="text" class="form-control" id="name" placeholder="{{ user.first_name }}">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Email</label>
-                                            <input placeholder="{{ user.email }}" type="email" class="form-control" id="email" aria-describedby="emailHelp">
-                                        </div>
-                                        <div class="mb-3">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <label for="exampleInputPassword1" class="form-label">Пароль</label>
-                                                <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
+                                            <div class="col-md-12 col-lg-9">
+                                                <h6>Описание подписки Lorem ipsum dolor sit, amet consectetur
+                                                    adipisicing elit. Eius saepe ea nobis necessitatibus
+                                                    consectetur rem! Eligendi assumenda facere sint quibusdam dolorem
+                                                    quasi doloribus nemo, temporibus molestiae
+                                                    distinctio cum laboriosam sed. Lorem ipsum dolor sit, amet
+                                                    consectetur adipisicing elit. Eius saepe ea nobis
+                                                    necessitatibus consectetur rem! Eligendi
+                                                    assumenda facere sint quibusdam dolorem quasi doloribus nemo,
+                                                    temporibus molestiae distinctio cum laboriosam
+                                                    sed.</h6>
                                             </div>
-                                        
-                                            <input type="password" class="form-control" id="password" placeholder="*********">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleInputPassword1" class="form-label">Подтверждение пароля</label>
-                                            <input type="password" class="form-control" id="PasswordConfirm" placeholder="*********">
-                                        </div>
-                                        <div class="d-block">
-                                            <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Сохранить
-                                                изменения</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="tab-pane fade" id="menu">
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
-                                        </div>
-                                        <div class="col-10 col-md-10">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <h2>Название подписки</h2>
+                                            <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
+                                                <div class="d-flex flex-row justify-content-between">
+                                                    <small>Персоны: </small><small>3</small>
                                                 </div>
-                                                <div class="col-md-12 col-lg-9">
-                                                    <h6>Описание подписки Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis necessitatibus
-                                                        consectetur rem! Eligendi assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae
-                                                        distinctio cum laboriosam sed. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis
-                                                        necessitatibus consectetur rem! Eligendi
-                                                        assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae distinctio cum laboriosam
-                                                        sed.</h6>
+                                                <div class="d-flex flex-row justify-content-between">
+                                                    <small>Аллергии: </small><small>нет</small>
                                                 </div>
-                                                <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Персоны: </small><small>3</small>
-                                                    </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Аллергии: </small><small>нет</small>
-                                                    </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Калории: </small><small>1400</small>
-                                                    </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Кол-во приёмов пищи: </small><small>4</small>
-                                                    </div>
-                                                    
+                                                <div class="d-flex flex-row justify-content-between">
+                                                    <small>Калории: </small><small>1400</small>
                                                 </div>
+                                                <div class="d-flex flex-row justify-content-between">
+                                                    <small>Кол-во приёмов пищи: </small><small>4</small>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+                        </div>
+
                     </div>
                 </div>
             </div>
         </section>
     </main>
-{% endblock content %}
+{% endblock content %}}
