@@ -18,9 +18,11 @@
                             <span class="badge rounded-circle position-absolute bottom-0 end-0 foodplan__bg_green avatar__plus"><a href="#"
                                     class="link-dark text-decoration-none align-middle">+</a></span>
                         </div>
-                        <h3 class="card-title text-center">Tim</h3>
+                        <h3 class="card-title text-center">{{ user.username }}</h3>
                         <div class="d-block">
-                            <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green">Выйти</button>
+                            <form action="{% url 'logout' %}">
+                                <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green">Выйти</button>
+                            </form>
                         </div>
                     </div>
 
@@ -43,11 +45,11 @@
                                                 <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
                                             </div>
                                         
-                                            <input type="text" class="form-control" id="name">
+                                            <input type="text" class="form-control" id="name" placeholder="{{ user.first_name }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                                            <input placeholder="{{ user.email }}" type="email" class="form-control" id="email" aria-describedby="emailHelp">
                                         </div>
                                         <div class="mb-3">
                                             <div class="d-flex align-items-center justify-content-between">
@@ -55,11 +57,11 @@
                                                 <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
                                             </div>
                                         
-                                            <input type="password" class="form-control" id="password">
+                                            <input type="password" class="form-control" id="password" placeholder="*********">
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputPassword1" class="form-label">Подтверждение пароля</label>
-                                            <input type="password" class="form-control" id="PasswordConfirm">
+                                            <input type="password" class="form-control" id="PasswordConfirm" placeholder="*********">
                                         </div>
                                         <div class="d-block">
                                             <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Сохранить
