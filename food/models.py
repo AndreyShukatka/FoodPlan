@@ -40,7 +40,7 @@ class Subscription(models.Model):
         verbose_name_plural = 'Подписки'
 
     def __str__(self):
-        return f'{self.period}: {self.price} руб.'
+        return f'{self.period} мес.: {self.price} руб.'
 
 class Category(models.Model):
     name = models.CharField(
@@ -170,6 +170,11 @@ class Recipe(models.Model):
         Ingredient,
         verbose_name='Ингредиент',
         related_name='recipes'
+    )
+    calories = models.IntegerField(
+        'Калорийность',
+        validators=[MinValueValidator(0)],
+        default=0
     )
 
     class Meta:
