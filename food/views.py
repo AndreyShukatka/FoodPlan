@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from .models import Subscription
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from .forms import RegisterUserForm, UserProfileForm, UserPasswordChangeForm
@@ -19,15 +20,15 @@ def registrated(request):
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
         email = request.POST.get('email')
+        print(form.field_order)
+        form.fields['first_name'] = form.fields['username']
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Пользователь с таким email уже существует!')
         else:
             if form.is_valid():
+                print(form.field_order)
+                form.username = email
                 ins = form.save()
-                username = form.cleaned_data['username']
-                password = form.cleaned_data['password1']
-
-                user = authenticate(username=username, password=password, email=email)
                 ins.email = email
                 ins.save()
                 form.save_m2m()
@@ -39,6 +40,10 @@ def registrated(request):
 
 def order(request):
     return render(request, "order.html")
+
+def card(request):
+    card = request.path.strip('/')
+    return render(request, f"{card}.html")
 
 
 def payment(request):

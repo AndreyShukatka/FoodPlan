@@ -4,18 +4,19 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPassw
 
 
 class RegisterUserForm(UserCreationForm):
-    username = forms.CharField(label='Имя', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(label='Имя', widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(required=True, label='Email', widget=forms.EmailInput(attrs={'class':'form-control'}))
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     fields = [
+        'username'
         'first_name',
-        'last_name',
-        'username',
         'email',
         'password1',
         'password2',
     ]
+
 
 class UserProfileForm(UserChangeForm):
     first_name = forms.CharField(widget=forms.TextInput (attrs={'class': 'form-control', 'readonly': False}))
