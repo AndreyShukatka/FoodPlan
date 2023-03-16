@@ -56,7 +56,11 @@
                 <div class="card px-5 py-3 d-flex align-items-center foodplan__shadow">
                     <form method="post", action="{% url 'registration' %}">
                         {% csrf_token %}
-                        {{ messages.error }}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <p style="color: red">{{ message }}</p>
+                            {% endfor %}
+                        {% endif %}
                         {{ form|crispy }}
                         <div class="row mb-3">
                             <div class="col-12 col-sm-6 mt-3">
