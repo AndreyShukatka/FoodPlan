@@ -1,6 +1,9 @@
 from django.urls import path
 from food import views
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -15,3 +18,5 @@ urlpatterns = [
     path('order/', views.order, name='order'),
     path('stub/', views.payment, name='stub'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

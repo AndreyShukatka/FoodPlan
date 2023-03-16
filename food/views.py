@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .models import Order
+from .models import Order, Menu, Category, Subscription
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from .forms import RegisterUserForm, UserProfileForm, UserPasswordChangeForm
@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.views import PasswordChangeView
 import datetime
+from django.db import transaction
 
 
 def index(request):
@@ -39,7 +40,27 @@ def registrated(request):
 
 
 def order(request):
-    return render(request, "order.html")
+    categories = Category.objects.all()
+    if request.method == 'POST':
+        order = Order.objects.create(
+            user=request.user,
+            menu_type=Menu.objects.get(pk=request.POST.get('foodtype')),
+            subscription=Subscription.objects.get(pk=request.POST.get('subscription')),
+            person_count=request.POST.get('person_count')
+        )
+        for category in categories:
+            if request.POST.get(f'category_{category.pk}') == '0':
+                order.category.add(category)
+        return redirect('stub')
+
+    menu_types = Menu.objects.all()
+    subscriptions = Subscription.objects.all()
+    return render(request, "order.html", context={
+        'menu_types': menu_types,
+        'categories': categories,
+        'subscriptions': subscriptions
+    })
+
 
 def card(request):
     card = request.path.strip('/')
@@ -104,4 +125,3 @@ class UserPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
 
     def get_success_url(self):
         return reverse_lazy('lk')
-

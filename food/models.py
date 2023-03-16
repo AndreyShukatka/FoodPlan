@@ -6,7 +6,13 @@ from django.contrib.auth.models import User
 class Menu(models.Model):
     name = models.CharField(
         'Тип меню',
-        max_length=10
+        max_length=20
+    )
+    image = models.ImageField(
+        verbose_name='Изображение',
+        blank=True,
+        null=True,
+        upload_to='images',
     )
 
     class Meta:
@@ -62,6 +68,7 @@ class Order(models.Model):
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
+        related_name='user_orders',
         on_delete=models.CASCADE
     )
     paid = models.BooleanField(
