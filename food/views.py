@@ -21,16 +21,16 @@ def registrated(request):
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
         email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
         print(form.field_order)
         form.fields['first_name'] = form.fields['username']
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Пользователь с таким email уже существует!')
         else:
             if form.is_valid():
-                print(form.field_order)
-                form.username = email
                 ins = form.save()
                 ins.email = email
+                ins.first_name = first_name
                 ins.save()
                 form.save_m2m()
                 return redirect('index')
@@ -89,7 +89,8 @@ def detailprofile(request):
     return render(request, 'lk.html', {'form': form, 'details': get_detail_order(request)})
 
 def get_detail_order(request):
-    order = Order.objects.get(user=request.user)
+    print(request.user.id)
+    order = Order.objects.get(user=2)
     subscription_period = order.subscription.get_period_display
     subscription_price = order.subscription.price
     paid = order.paid
