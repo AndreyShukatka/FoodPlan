@@ -3,7 +3,12 @@ import re
 from pprint import pprint
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from django.db import models
+from django.core.management.base import BaseCommand
+from food.models import Recipe, Ingredient, Menu, Category
+
+
+base_url = 'https://1000.menu/'
+base_img_url = 'https://static.1000.menu'
 
 
 def parse_resipy_page(res):
@@ -74,10 +79,7 @@ def parse_resipy_page_urls(response):
     return full_links
 
 
-if __name__ == '__main__':
-    base_url = 'https://1000.menu/'
-
-    base_img_url = 'https://static.1000.menu'
+def main():
     dinner_urls_page = 'https://1000.menu/catalog/lyogkii-ujin?ms=1&str=&cat_es_inp%5B%5D=10090&es_tf=0&es_tt=14&es_cf=0&es_ct=2000'
     # dinner_url = 'https://1000.menu/cooking/50341-pp-kurica-zapechennaya-s-ovoshchami-v-duxovke'
 
@@ -89,5 +91,25 @@ if __name__ == '__main__':
 
         dish_info, dish_name = parse_resipy_page(response)
         all_dishes[dish_name] = dish_info
-    pprint(all_dishes)
+        print(f'dish_name: {dish_name}')
+        print(f'dish_info: {dish_info}')
 
+        recipe, created = Recipe.objects.get_or_create(
+            name=dish_name,
+            description=dish_info['recipy']['1'],
+            calories=dish_info['call']
+        )
+        if not created:
+            menu = Menu.objects.order_by('?')[0]
+            category = Category.objects.order_by('?')[0]
+            recipe.menu = menu
+            recipe.category = category
+            recipe.save()
+            for ingredient in dish_info['ingridients']:
+                recipe.ingredient.create(name=ingredient)
+
+class Command(BaseCommand):
+    help = 'Start parse recipes'
+
+    def handle(self, *args, **options):
+        main()
