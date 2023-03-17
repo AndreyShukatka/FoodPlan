@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .models import Order, Menu, Category, Subscription
+from .models import Order, Menu, Category, Subscription, Recipe
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from .forms import RegisterUserForm, UserProfileForm, UserPasswordChangeForm
@@ -62,9 +62,15 @@ def order(request):
     })
 
 
-def card(request):
-    card = request.path.strip('/')
-    return render(request, f"{card}.html")
+def get_cards(request, pk):
+    recipe_detail = {}
+    if pk:
+        recipe = Recipe.objects.get(id=pk)
+        return render(request, "card2.html", {'recipe': recipe})
+    else:
+        all_recipes = Recipe.objects.all()
+        return render(request, "card2.html", {'recipe': all_recipes})
+
 
 
 def payment(request):
