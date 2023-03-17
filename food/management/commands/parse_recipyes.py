@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from django.core.management.base import BaseCommand
 from food.models import Recipe, Ingredient, Menu, Category
+import os
+from urllib.parse import urljoin, urlsplit
 
 
 base_url = 'https://1000.menu/'
@@ -79,34 +81,66 @@ def parse_resipy_page_urls(response):
     return full_links
 
 
+def download_img(url, folder):
+    os.makedirs(folder, exist_ok=True)
+    response = requests.get(url)
+    response.raise_for_status()
+    file_name = os.path.basename(urlsplit(url).path)
+    img_path = os.path.join(folder, file_name)
+    with open(img_path, 'wb') as file:
+        file.write(response.content)
+    return img_path
+
 def main():
     dinner_urls_page = 'https://1000.menu/catalog/lyogkii-ujin?ms=1&str=&cat_es_inp%5B%5D=10090&es_tf=0&es_tt=14&es_cf=0&es_ct=2000'
-    # dinner_url = 'https://1000.menu/cooking/50341-pp-kurica-zapechennaya-s-ovoshchami-v-duxovke'
 
     response = requests.get(dinner_urls_page)
     dishes_urls = parse_resipy_page_urls(response)
     all_dishes = {}
     for dish_url in dishes_urls:
         response = requests.get(dish_url)
-
         dish_info, dish_name = parse_resipy_page(response)
         all_dishes[dish_name] = dish_info
-        print(f'dish_name: {dish_name}')
-        print(f'dish_info: {dish_info}')
+
+    folder = 'imges'
+    for dish in all_dishes:
+        name = dish
+        calories = all_dishes[dish]['call']
+
+        img_url = all_dishes[dish]['img_url']
+        img_path = download_img(img_url, folder)
+        print(img_path)
+
+        recepy_text = str()
+        for cooking_step in all_dishes[dish]['recipy']:
+
+            recepy_text = recepy_text + '\n' + all_dishes[dish]['recipy'][cooking_step]
+
+        for one_dish in all_dishes[dish]['ingridients']:
+            ingredient_name = one_dish
+            ingredient_unit = all_dishes[dish]['ingridients'][one_dish]['unit']
+            try:
+                ingredient_quantity = float(all_dishes[dish]['ingridients'][one_dish]['count'])
+            except ValueError:
+                ingredient_quantity = 0
+
+
+
 
         recipe, created = Recipe.objects.get_or_create(
-            name=dish_name,
-            description=dish_info['recipy']['1'],
-            calories=dish_info['call']
+            name=name,
+            description=recepy_text,
+            calories=calories,
+            image = img_path
         )
-        if not created:
-            menu = Menu.objects.order_by('?')[0]
-            category = Category.objects.order_by('?')[0]
-            recipe.menu = menu
-            recipe.category = category
-            recipe.save()
-            for ingredient in dish_info['ingridients']:
-                recipe.ingredient.create(name=ingredient)
+        # if not created:
+        #     menu = Menu.objects.order_by('?')[0]
+        #     category = Category.objects.order_by('?')[0]
+        #     recipe.menu = menu
+        #     recipe.category = category
+        #     recipe.save()
+        #     for ingredient in dish_info['ingridients']:
+        #         recipe.ingredient.create(name=ingredient)
 
 class Command(BaseCommand):
     help = 'Start parse recipes'
