@@ -12,7 +12,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='index.html'), name='logout'),
     path('password-change/', views.UserPasswordChangeView.as_view(), name='password_change'),
     path('lk/', views.detailprofile, name='lk'),
-    path('card<int:pk>/', views.get_cards, name='card'),
+    path('card<int:pk>/', views.get_card, name='card'),
+    path('all_card/', views.get_all_cards, name='all_card'),
     path('order/', views.order, name='order'),
     path('stub/', views.payment, name='stub'),
 ]

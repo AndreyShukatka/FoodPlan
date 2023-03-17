@@ -28,9 +28,15 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse1">
                         <ul class="navbar-nav w-100">
                             {% if user.is_authenticated %}
-                                <form class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end" action="{% url 'order' %}">
-                                <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Подписка</button>
-                                </form>
+                                {% if user.user_orders.get.paid %}
+                                    <form class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end" action="{% url 'all_card' %}">
+                                    <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Мои рецепты</button>
+                                    </form>
+                                {% else %}
+                                    <form class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end" action="{% url 'order' %}">
+                                    <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Подписка</button>
+                                    </form>
+                                {% endif %}
                                 <form action="{% url 'lk' %}">
                                   <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
                                       {{ user.first_name }}

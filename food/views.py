@@ -62,15 +62,14 @@ def order(request):
     })
 
 
-def get_cards(request, pk):
-    recipe_detail = {}
-    if pk:
-        recipe = Recipe.objects.get(id=pk)
-        return render(request, "card2.html", {'recipe': recipe})
-    else:
-        all_recipes = Recipe.objects.all()
-        return render(request, "card2.html", {'recipe': all_recipes})
+def get_card(request, pk):
+    recipe = Recipe.objects.get(id=pk)
+    return render(request, "card2.html", {'recipe': recipe})
 
+
+def get_all_cards(request):
+    recipes = Recipe.objects.all()
+    return render(request, "all_cards.html", {'recipes': recipes})
 
 
 def payment(request):

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <main style="margin-top: calc(2rem + 75px);">
+        <section>
+            <div class="container">
+                {% for recipe in recipes %}
+                <div class="row">
+                    <div class="col-12 col-md-4 d-flex justify-content-center">
+                        <div class="card foodplan__card_borderless">
+                            <img src="{{recipe.image.url}}" alt="">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 d-flex flex-column justify-content-between">
+                        <div class="row">
+                            <h2>{{ recipe.name}}</h2>
+                            <div class="col-12 col-sm-6 d-flex flex-column justify-content-between">
+                                <h6>{{ recipe.description}}</h6>
+                                <form action="{% url 'card' recipe.id %}">
+                                    <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Мои рецепты</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <p></p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+{% endblock content %}
