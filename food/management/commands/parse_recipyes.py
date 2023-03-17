@@ -109,7 +109,7 @@ def main():
 
         img_url = all_dishes[dish]['img_url']
         img_path = download_img(img_url, folder)
-        print(img_path)
+
 
         recepy_text = str()
         for cooking_step in all_dishes[dish]['recipy']:
@@ -133,14 +133,22 @@ def main():
             calories=calories,
             image = img_path
         )
-        # if not created:
-        #     menu = Menu.objects.order_by('?')[0]
-        #     category = Category.objects.order_by('?')[0]
-        #     recipe.menu = menu
-        #     recipe.category = category
-        #     recipe.save()
-        #     for ingredient in dish_info['ingridients']:
-        #         recipe.ingredient.create(name=ingredient)
+
+        menu = Menu.objects.order_by('?')[0]
+        category = Category.objects.order_by('?')[0]
+        recipe.menu = menu
+        recipe.category = category
+        recipe.save()
+        for one_dish in all_dishes[dish]['ingridients']:
+            ingredient_name = one_dish
+            ingredient_unit = all_dishes[dish]['ingridients'][one_dish]['unit']
+            try:
+                ingredient_quantity = float(all_dishes[dish]['ingridients'][one_dish]['count'])
+            except ValueError:
+                ingredient_quantity = 0
+
+
+            recipe.ingredient.create(name=ingredient_name, unit = ingredient_unit ,quantity = ingredient_quantity)
 
 class Command(BaseCommand):
     help = 'Start parse recipes'
