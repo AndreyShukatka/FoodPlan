@@ -68,8 +68,11 @@ def get_card(request, pk):
 
 
 def get_all_cards(request):
-    recipes = Recipe.objects.all()
-    return render(request, "all_cards.html", {'recipes': recipes})
+    user_orders = request.user.user_orders.all()
+    for user_order in user_orders:
+        if user_order.paid:
+            recipes = Recipe.objects.filter(menu=user_order.menu_type)
+            return render(request, "all_cards.html", {'recipes': recipes})
 
 
 def payment(request):
