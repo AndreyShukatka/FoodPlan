@@ -102,7 +102,7 @@ def main():
         dish_info, dish_name = parse_resipy_page(response)
         all_dishes[dish_name] = dish_info
 
-    folder = 'imges'
+    folder = 'media/dishes'
     for dish in all_dishes:
         name = dish
         calories = all_dishes[dish]['call']
@@ -134,21 +134,22 @@ def main():
             image = img_path
         )
 
-        menu = Menu.objects.order_by('?')[0]
-        category = Category.objects.order_by('?')[0]
-        recipe.menu = menu
-        recipe.category = category
-        recipe.save()
-        for one_dish in all_dishes[dish]['ingridients']:
-            ingredient_name = one_dish
-            ingredient_unit = all_dishes[dish]['ingridients'][one_dish]['unit']
-            try:
-                ingredient_quantity = float(all_dishes[dish]['ingridients'][one_dish]['count'])
-            except ValueError:
-                ingredient_quantity = 0
+        if created:
+            menu = Menu.objects.order_by('?')[0]
+            category = Category.objects.order_by('?')[0]
+            recipe.menu = menu
+            recipe.category.add(category)
+            recipe.save()
+            for one_dish in all_dishes[dish]['ingridients']:
+                ingredient_name = one_dish
+                ingredient_unit = all_dishes[dish]['ingridients'][one_dish]['unit']
+                try:
+                    ingredient_quantity = float(all_dishes[dish]['ingridients'][one_dish]['count'])
+                except ValueError:
+                    ingredient_quantity = 0
 
 
-            recipe.ingredient.create(name=ingredient_name, unit = ingredient_unit ,quantity = ingredient_quantity)
+                recipe.ingredient.create(name=ingredient_name, unit = ingredient_unit ,quantity = ingredient_quantity)
 
 class Command(BaseCommand):
     help = 'Start parse recipes'
