@@ -55,7 +55,7 @@ def order(request):
         for category in categories:
             if request.POST.get(f'category_{category.pk}') == '0':
                 order.category.add(category)
-        return redirect('order_payment')
+        return redirect('order_payment', pk=order.pk)
 
     menu_types = Menu.objects.all()
     subscriptions = Subscription.objects.all()
