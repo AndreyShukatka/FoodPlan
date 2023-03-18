@@ -5,25 +5,45 @@
         <section>
             <div class="container">
                 {% if user.user_orders.check_active_order %}
-                {% for recipe in recipes %}
-                <div class="row">
-                    <div class="col-12 col-md-4 d-flex justify-content-center">
-                        <div class="card foodplan__card_borderless">
-                            <img src="{{ recipe.image.url }}" alt="">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                  {% for key,day in days.items %}
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if key == 1 %}active{% endif %} foodplan_green foodplan__border_green" id="pills-tab-{{ key }}" data-bs-toggle="pill" data-bs-target="#pills-{{ key }}" type="button" role="tab" aria-controls="pills-{{ key }}" aria-selected="{% if key == 1 %}true{% else %}false{% endif %}">{{ key }} день</button>
+                  </li>
+                  {% endfor %}
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                  {% for key,day in days.items %}
+                  <div class="tab-pane fade {% if key == 1 %}show active{% endif %}" id="pills-{{ key }}" role="tabpanel" aria-labelledby="pills-tab-{{ key }}">
+                  {% for recipe in day.categories %}
+
+                    <div class="row mt-5">
+                        <div class="col-12 col-md-4 d-flex justify-content-center">
+                            <div class="card foodplan__card_borderless">
+                                <img src="{{ recipe.image.url }}" alt="">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-8 d-flex flex-column justify-content-between">
-                        <div class="row">
-                            <h2>{{ recipe.name }}</h2>
-                            <div class="col-12 d-flex flex-column justify-content-between">
-                                {{ recipe.preview_text|safe }}
-                                <p class="mt-3"><a href="{% url 'card' recipe.id %}" class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Подробнее</a></p>
+                        <div class="col-12 col-md-8 d-flex flex-column justify-content-between">
+                            <div class="row">
+                                <h2>{{ recipe.name }}</h2>
+                                <div class="col-12 d-flex flex-column justify-content-between">
+                                    {{ recipe.preview_text|safe }}
+                                    <p><span class="badge bg-primary">{{ recipe.category.all|join:"." }}</span>
+                                    <span class="badge bg-secondary">{{ recipe.menu.name }}</span></p>
+                                    <p class="mt-3"><a href="{% url 'card' recipe.id %}" class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Подробнее</a></p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                  {% endfor %}
+                  </div>
+                  {% endfor %}
+                  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                  </div>
+                  <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                  </div>
                 </div>
-                    <p></p>
-                {% endfor %}
                 {% else %}
                 <h1 class="mb-5"><b>У вас нет активной подписки</b></h1>
                 {% endif %}

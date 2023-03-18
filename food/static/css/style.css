@@ -245,3 +245,16 @@ body {
         background-color: #91B93E;
     }
 }
+.nav-pills .nav-link.active{
+    color: #fff;
+    background-color: #198754;
+}
+.nav-link:hover {
+    color: #198754;
+}
+.bg-primary {
+    background-color: #198754!important;
+}
+.bg-secondary {
+    background-color: #91B93E!important;
+}

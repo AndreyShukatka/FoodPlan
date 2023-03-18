@@ -77,6 +77,16 @@ class OrderManager(models.Manager):
                 return True
         return False
 
+    def active_order(self):
+        paid_orders = self.filter(paid=True)
+        print("!")
+        for order in paid_orders:
+            last_day_order = order.payment_date + relativedelta(months=int(order.subscription.period))
+            if datetime.now().date() < last_day_order:
+                print(order)
+                return order
+        return False
+
 
 class Order(models.Model):
     user = models.ForeignKey(

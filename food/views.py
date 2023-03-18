@@ -97,11 +97,27 @@ def get_card(request, pk):
 
 
 def get_all_cards(request):
-    user_orders = request.user.user_orders.all()
-    for user_order in user_orders:
-        if user_order.paid:
-            recipes = Recipe.objects.filter(menu=user_order.menu_type)
-            return render(request, "all_cards.html", {'recipes': recipes})
+    if request.user.user_orders.check_active_order == True:
+        return redirect('all_card')
+    user_order = request.user.user_orders.active_order()
+    days = {}
+    for day in range(1,8):
+        days[day] = {
+            'number': day,
+            'categories': []
+        }
+        for category in user_order.category.all():
+            recipe = Recipe.objects.filter(
+                menu=user_order.menu_type,
+                category=category
+            ).order_by('?')[0]
+            days[day]['categories'].append(recipe)
+    recipes = Recipe.objects.filter(
+        menu=user_order.menu_type,
+        category__in=user_order.category.all()
+    )
+    print(days)
+    return render(request, "all_cards.html", {'recipes': recipes, 'days': days})
 
 
 def payment(request):
