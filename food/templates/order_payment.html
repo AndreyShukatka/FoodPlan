@@ -21,6 +21,7 @@
                 </ul>
               </li>
               <li>Количество персон: {{ order.person_count }}</li>
+              <li>Стоимость: {{ order.subscription.price }} ₽</li>
             </ul>
             <div class="d-block mt-3">
                 <a href="{% url 'success_payment' pk=order.pk %}" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Подтвердить</a>
