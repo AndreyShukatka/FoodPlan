@@ -89,10 +89,12 @@ def download_img(url, folder):
     img_path = os.path.join(folder, file_name)
     with open(img_path, 'wb') as file:
         file.write(response.content)
+    img_path = os.path.join('/dishes/', file_name)
     return img_path
 
 def main():
-    dinner_urls_page = 'https://1000.menu/catalog/lyogkii-ujin?ms=1&str=&cat_es_inp%5B%5D=10090&es_tf=0&es_tt=14&es_cf=0&es_ct=2000'
+    # dinner_urls_page = 'https://1000.menu/catalog/lyogkii-ujin?ms=1&str=&cat_es_inp%5B%5D=10090&es_tf=0&es_tt=14&es_cf=0&es_ct=2000'
+    dinner_urls_page = 'https://1000.menu/catalog/zvanji-uzhin'
 
     response = requests.get(dinner_urls_page)
     dishes_urls = parse_resipy_page_urls(response)
@@ -127,21 +129,18 @@ def main():
             except ValueError:
                 ingredient_quantity = 0
 
-
-
-
         recipe, created = Recipe.objects.get_or_create(
             name=name,
             calories=calories,
-            image = img_path
         )
 
         if created:
             menu = Menu.objects.order_by('?')[0]
-            category = Category.objects.order_by('?')[0]
+            category = Category.objects.get(name='Ужины')
             recipe.description = recepy_text
             recipe.preview_text = recepy_prev_text
             recipe.menu = menu
+            recipe.image = img_path
             recipe.category.add(category)
             recipe.save()
             for one_dish in all_dishes[dish]['ingridients']:
@@ -156,6 +155,7 @@ def main():
         else:
             recipe.preview_text = recepy_prev_text
             recipe.description = recepy_text
+            recipe.image = img_path
             recipe.save()
 
 class Command(BaseCommand):

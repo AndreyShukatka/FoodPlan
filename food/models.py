@@ -73,9 +73,9 @@ class OrderManager(models.Manager):
         paid_orders = self.filter(paid=True)
         for order in paid_orders:
             last_day_order = order.payment_date + relativedelta(months=int(order.subscription.period))
-            print(last_day_order)
             if datetime.now().date() < last_day_order:
                 return True
+        return False
 
 
 class Order(models.Model):
@@ -169,7 +169,7 @@ class Recipe(models.Model):
         verbose_name='Изображение',
         blank=True,
         null=True,
-        upload_to='images',
+        upload_to='dishes',
     )
     preview_text = models.TextField(
         'Краткое описание',

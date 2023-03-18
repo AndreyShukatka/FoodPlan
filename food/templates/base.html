@@ -27,36 +27,26 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarCollapse1">
                         <ul class="navbar-nav w-100">
+                          <div class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end">
                             {% if user.is_authenticated %}
                                 {% if user.user_orders.check_active_order %}
-                                    <form class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end" action="{% url 'all_card' %}">
-                                    <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Мои рецепты</button>
-                                    </form>
+                                    <a href="{% url 'all_card' %}" class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Мои рецепты</a>
                                 {% else %}
-                                    <form class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end" action="{% url 'order' %}">
-                                    <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Подписка</button>
-                                    </form>
+                                    <a href="{% url 'order' %}" class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Подписка</a>
                                 {% endif %}
-                                <form action="{% url 'lk' %}">
-                                  <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">
+                                  <a href="{% url 'lk' %}" class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">
                                       {{ user.first_name }}
-                                  </button>
-                                </form>
-                                <form action="{% url 'logout' %}">
-                                  <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
+                                  </a>
+                                  <a href="{% url 'logout' %}" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
                                       Выход
-                                  </button>
-                                </form>
+                                  </a>
                             {% else %}
-                                <form class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end" action="{% url 'registration' %}">
-                                <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Регистрация</button>
-                                </form>
-                                <form action="{% url 'login' %}">
-                                  <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
+                                <a href="{% url 'registration' %}" class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Регистрация</a>
+                                  <a href="{% url 'login' %}" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">
                                      Войти
-                                  </button>
-                                </form>
+                                  </a>
                             {% endif %}
+                          </div>
                         </ul>
                     </div>
                 </div>

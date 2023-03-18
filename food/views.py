@@ -44,7 +44,7 @@ def registrated(request):
 
 
 def order(request):
-    if request.user.user_orders.check_active_order:
+    if request.user.user_orders.check_active_order == True:
         return redirect('all_card')
     categories = Category.objects.all()
     if request.method == 'POST':
