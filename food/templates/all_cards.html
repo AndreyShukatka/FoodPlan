@@ -4,7 +4,7 @@
     <main style="margin-top: calc(2rem + 75px);">
         <section>
             <div class="container">
-                {% if user.user_orders.get.paid %}
+                {% if user.user_orders.check_active_order %}
                 {% for recipe in recipes %}
                 <div class="row">
                     <div class="col-12 col-md-4 d-flex justify-content-center">
