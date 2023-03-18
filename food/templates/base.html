@@ -28,7 +28,7 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse1">
                         <ul class="navbar-nav w-100">
                             {% if user.is_authenticated %}
-                                {% if user.user_orders.get.paid %}
+                                {% if user.user_orders.check_active_order %}
                                     <form class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end" action="{% url 'all_card' %}">
                                     <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Мои рецепты</button>
                                     </form>

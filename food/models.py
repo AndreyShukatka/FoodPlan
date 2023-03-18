@@ -1,6 +1,10 @@
+from datetime import datetime
+
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
+
+from dateutil.relativedelta import relativedelta
 
 
 class Menu(models.Model):
@@ -64,6 +68,16 @@ class Category(models.Model):
         return self.name
 
 
+class OrderManager(models.Manager):
+    def check_active_order(self):
+        paid_orders = self.filter(paid=True)
+        for order in paid_orders:
+            last_day_order = order.payment_date + relativedelta(months=int(order.subscription.period))
+            print(last_day_order)
+            if datetime.now().date() < last_day_order:
+                return True
+
+
 class Order(models.Model):
     user = models.ForeignKey(
         User,
@@ -108,6 +122,7 @@ class Order(models.Model):
             MaxValueValidator(6)
         ]
     )
+    objects = OrderManager()
 
     class Meta:
         verbose_name = 'Заказ'
