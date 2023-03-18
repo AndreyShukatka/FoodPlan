@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+ <div class="container">
+    <div class="d-flex w-50 py-lg-5 foodplan__head">
+        <div class="d-flex flex-column justify-content-start foodplan__head_desc">
+            {% if order %}
+            <h1 class="mb-5"><b>Ваш заказ оплачен</b></h1>
+            <p>Дата окончания подписки: {{ order.last_day_order }}</p>
+            <div class="d-block mt-3">
+                <a href="{% url 'all_card' %}" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Мои рецепты</a>
+            </div>
+            {% else %}
+            <h1 class="mb-5"><b>Эта часть сайта находится в разработке</b></h1>
+            <div class="d-block mt-3">
+                {% if user.is_authenticated %}
+                    <form action="{% url 'order' %}">
+                {% else %}
+                    <form action="{% url 'login' %}">
+                {% endif %}
+                <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Хочу попробовать</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

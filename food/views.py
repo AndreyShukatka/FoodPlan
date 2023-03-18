@@ -1,14 +1,18 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from .models import Order, Menu, Category, Subscription, Recipe
-from django.contrib.auth import authenticate
-from django.contrib import messages
-from .forms import RegisterUserForm, UserProfileForm, UserPasswordChangeForm
-from django.urls import reverse_lazy
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.views import PasswordChangeView
 import datetime
+
+from django.contrib import messages
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+
+from .models import Order, Menu, Category, Subscription, Recipe
+from .forms import RegisterUserForm, UserProfileForm, UserPasswordChangeForm
+
+from dateutil.relativedelta import relativedelta
 
 
 def index(request):
@@ -51,7 +55,7 @@ def order(request):
         for category in categories:
             if request.POST.get(f'category_{category.pk}') == '0':
                 order.category.add(category)
-        return redirect('stub')
+        return redirect('order_payment')
 
     menu_types = Menu.objects.all()
     subscriptions = Subscription.objects.all()
@@ -60,6 +64,29 @@ def order(request):
         'categories': categories,
         'subscriptions': subscriptions
     })
+
+
+def order_payment(request, pk):
+    try:
+        order = Order.objects.get(id=pk)
+        if order.user != request.user:
+            order = {}
+    except:
+        order = {}
+    return render(request, "order_payment.html", {'order': order,})
+
+def success_payment(request, pk):
+    try:
+        order = Order.objects.get(id=pk)
+        if order.paid:
+            return render(request, "success_payment.html", {})
+        order.paid = True
+        order.payment_date = datetime.datetime.now()
+        order.save()
+        order.last_day_order = order.payment_date + relativedelta(months=int(order.subscription.period))
+        return render(request, "success_payment.html", {'order': order,})
+    except:
+        return render(request, "success_payment.html", {})
 
 
 def get_card(request, pk):

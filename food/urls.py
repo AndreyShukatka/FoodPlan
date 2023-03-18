@@ -15,6 +15,8 @@ urlpatterns = [
     path('card<int:pk>/', views.get_card, name='card'),
     path('all_card/', views.get_all_cards, name='all_card'),
     path('order/', views.order, name='order'),
+    path('order_payment/<int:pk>', views.order_payment, name='order_payment'),
+    path('success_payment/<int:pk>', views.success_payment, name='success_payment'),
     path('stub/', views.payment, name='stub'),
 ]
 if settings.DEBUG:
