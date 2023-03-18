@@ -171,9 +171,12 @@ class Recipe(models.Model):
         null=True,
         upload_to='images',
     )
+    preview_text = models.TextField(
+        'Краткое описание',
+        blank=True
+    )
     description = models.TextField(
         'Описание',
-        max_length=200,
         blank=True
     )
     menu = models.ForeignKey(

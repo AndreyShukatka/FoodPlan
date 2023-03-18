@@ -111,10 +111,13 @@ def main():
         img_path = download_img(img_url, folder)
 
 
-        recepy_text = str()
-        for cooking_step in all_dishes[dish]['recipy']:
-
-            recepy_text = recepy_text + '\n' + all_dishes[dish]['recipy'][cooking_step]
+        recepy_text = ''
+        for step_index, cooking_step in enumerate(all_dishes[dish]['recipy']):
+            if step_index == 0:
+                recepy_text = f'{recepy_text} <p>{all_dishes[dish]["recipy"][cooking_step]}</p>'
+                recepy_prev_text = all_dishes[dish]['recipy'][cooking_step]
+            else:
+                recepy_text = f'{recepy_text} <p>{step_index}. {all_dishes[dish]["recipy"][cooking_step]}</p>'
 
         for one_dish in all_dishes[dish]['ingridients']:
             ingredient_name = one_dish
@@ -129,7 +132,6 @@ def main():
 
         recipe, created = Recipe.objects.get_or_create(
             name=name,
-            description=recepy_text,
             calories=calories,
             image = img_path
         )
@@ -137,6 +139,8 @@ def main():
         if created:
             menu = Menu.objects.order_by('?')[0]
             category = Category.objects.order_by('?')[0]
+            recipe.description = recepy_text
+            recipe.preview_text = recepy_prev_text
             recipe.menu = menu
             recipe.category.add(category)
             recipe.save()
@@ -148,8 +152,11 @@ def main():
                 except ValueError:
                     ingredient_quantity = 0
 
-
                 recipe.ingredient.create(name=ingredient_name, unit = ingredient_unit ,quantity = ingredient_quantity)
+        else:
+            recipe.preview_text = recepy_prev_text
+            recipe.description = recepy_text
+            recipe.save()
 
 class Command(BaseCommand):
     help = 'Start parse recipes'

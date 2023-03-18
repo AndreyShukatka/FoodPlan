@@ -68,7 +68,7 @@ body {
 }
 
 .foodplan__head_bg {
-    background-image: url(img/head-bg.png);
+    background-image: url(../img/head-bg.png);
     background-repeat: no-repeat;
     background-position: right;
     background-size: contain;
@@ -80,7 +80,7 @@ body {
 }
 
 .foodplan__mobapp {
-    background-image: url(img/phone.png);
+    background-image: url(../img/phone.png);
     background-repeat: no-repeat;
     background-position: 98% 50%;
     background-size: contain;
@@ -155,7 +155,7 @@ body {
 
 @media (max-width: 992px) {
     .navbar__sideBtns {
-        display: none;   
+        display: none;
     }
 }
 
