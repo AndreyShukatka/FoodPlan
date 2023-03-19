@@ -1,7 +1,7 @@
 import datetime
 
 from django.contrib import messages
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -29,7 +29,8 @@ def registrated(request):
         form = RegisterUserForm(request.POST)
         email = request.POST.get('email')
         first_name = request.POST.get('first_name')
-        print(form.field_order)
+        username = request.POST.get('username')
+        password = request.POST.get('password1')
         form.fields['first_name'] = form.fields['username']
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Пользователь с таким email уже существует!')
@@ -40,6 +41,8 @@ def registrated(request):
                 ins.first_name = first_name
                 ins.save()
                 form.save_m2m()
+                user = authenticate(username=username, password=password)
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('index')
     else:
         form = RegisterUserForm(request.POST)
@@ -110,16 +113,18 @@ def get_all_cards(request):
             'categories': []
         }
         for category in user_order.category.all():
-            recipe = Recipe.objects.filter(
-                menu=user_order.menu_type,
-                category=category
-            ).order_by('?')[0]
+            if Recipe.objects.filter(category=category):
+                recipe = Recipe.objects.filter(
+                    menu=user_order.menu_type,
+                    category=category
+                ).order_by('?')[0]
+            else:
+                continue
             days[day]['categories'].append(recipe)
     recipes = Recipe.objects.filter(
         menu=user_order.menu_type,
         category__in=user_order.category.all()
     )
-    print(days)
     return render(request, "all_cards.html", {'recipes': recipes, 'days': days})
 
 
