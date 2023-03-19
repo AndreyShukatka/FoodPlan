@@ -17,9 +17,8 @@ from dateutil.relativedelta import relativedelta
 
 def index(request):
     free_dishes = Recipe.objects.filter(free=True)
-    data = {'free_dishes':free_dishes}
+    data = {'free_dishes': free_dishes}
     return render(request, "index.html", context=data)
-
 
 
 def registrated(request):
@@ -81,7 +80,8 @@ def order_payment(request, pk):
             order = {}
     except:
         order = {}
-    return render(request, "order_payment.html", {'order': order,})
+    return render(request, "order_payment.html", {'order': order, })
+
 
 def success_payment(request, pk):
     try:
@@ -92,7 +92,7 @@ def success_payment(request, pk):
         order.payment_date = datetime.datetime.now()
         order.save()
         order.last_day_order = order.payment_date + relativedelta(months=int(order.subscription.period))
-        return render(request, "success_payment.html", {'order': order,})
+        return render(request, "success_payment.html", {'order': order, })
     except:
         return render(request, "success_payment.html", {})
 
@@ -107,7 +107,7 @@ def get_all_cards(request):
         return redirect('all_card')
     user_order = request.user.user_orders.active_order()
     days = {}
-    for day in range(1,8):
+    for day in range(1, 8):
         days[day] = {
             'number': day,
             'categories': []
@@ -150,7 +150,6 @@ def detailprofile(request):
     return render(request, 'lk.html', {'form': form, 'details': get_detail_order(request)})
 
 
-
 def get_detail_order(request):
     try:
         order = Order.objects.get(user=request.user)
@@ -160,14 +159,14 @@ def get_detail_order(request):
         payment_date = order.payment_date
         end_date = payment_date + datetime.timedelta(days=30 * int(order.subscription.period))
         menu_type = order.menu_type
-        category = order.category ## Может быть несколько
+        category = order.category  ## Может быть несколько
         person_count = order.person_count
         detail_order = {
             'subscription_period': subscription_period,
             'subscription_price': subscription_price,
             'paid': paid,
             'payment_date': payment_date,
-            'end_date' : end_date,
+            'end_date': end_date,
             'menu_type': menu_type,
             'category': category,
             'person_count': person_count,
@@ -192,4 +191,3 @@ class UserPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
 
     def get_success_url(self):
         return reverse_lazy('lk')
-
