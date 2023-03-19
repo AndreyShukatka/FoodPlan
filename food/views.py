@@ -1,14 +1,18 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from .models import Order, Menu, Category, Subscription, Recipe
-from django.contrib.auth import authenticate
-from django.contrib import messages
-from .forms import RegisterUserForm, UserProfileForm, UserPasswordChangeForm
-from django.urls import reverse_lazy
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.views import PasswordChangeView
 import datetime
+
+from django.contrib import messages
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+
+from .models import Order, Menu, Category, Subscription, Recipe
+from .forms import RegisterUserForm, UserProfileForm, UserPasswordChangeForm
+
+from dateutil.relativedelta import relativedelta
 
 
 def index(request):
@@ -40,6 +44,8 @@ def registrated(request):
 
 
 def order(request):
+    if request.user.user_orders.check_active_order == True:
+        return redirect('all_card')
     categories = Category.objects.all()
     if request.method == 'POST':
         order = Order.objects.create(
@@ -51,7 +57,7 @@ def order(request):
         for category in categories:
             if request.POST.get(f'category_{category.pk}') == '0':
                 order.category.add(category)
-        return redirect('stub')
+        return redirect('order_payment', pk=order.pk)
 
     menu_types = Menu.objects.all()
     subscriptions = Subscription.objects.all()
@@ -62,17 +68,56 @@ def order(request):
     })
 
 
+def order_payment(request, pk):
+    try:
+        order = Order.objects.get(id=pk)
+        if order.user != request.user:
+            order = {}
+    except:
+        order = {}
+    return render(request, "order_payment.html", {'order': order,})
+
+def success_payment(request, pk):
+    try:
+        order = Order.objects.get(id=pk)
+        if order.paid:
+            return render(request, "success_payment.html", {})
+        order.paid = True
+        order.payment_date = datetime.datetime.now()
+        order.save()
+        order.last_day_order = order.payment_date + relativedelta(months=int(order.subscription.period))
+        return render(request, "success_payment.html", {'order': order,})
+    except:
+        return render(request, "success_payment.html", {})
+
+
 def get_card(request, pk):
     recipe = Recipe.objects.get(id=pk)
     return render(request, "card2.html", {'recipe': recipe})
 
 
 def get_all_cards(request):
-    user_orders = request.user.user_orders.all()
-    for user_order in user_orders:
-        if user_order.paid:
-            recipes = Recipe.objects.filter(menu=user_order.menu_type)
-            return render(request, "all_cards.html", {'recipes': recipes})
+    if request.user.user_orders.check_active_order == True:
+        return redirect('all_card')
+    user_order = request.user.user_orders.active_order()
+    days = {}
+    for day in range(1,8):
+        days[day] = {
+            'number': day,
+            'categories': []
+        }
+        for category in user_order.category.all():
+            recipe = Recipe.objects.filter(
+                menu=user_order.menu_type,
+                category=category
+            ).order_by('?')[0]
+            days[day]['categories'].append(recipe)
+    recipes = Recipe.objects.filter(
+        menu=user_order.menu_type,
+        category__in=user_order.category.all()
+    )
+    print(days)
+    return render(request, "all_cards.html", {'recipes': recipes, 'days': days})
 
 
 def payment(request):

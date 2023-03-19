@@ -14,7 +14,7 @@
                         <div class="row">
                             <h2>{{ recipe.name}}</h2>
                             <div class="col-12 col-sm-6 d-flex flex-column justify-content-between">
-                                <h6>{{ recipe.description}}</h6>
+                                <h6>{{ recipe.description|safe }}</h6>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <small class="link-secondary">Ингредиенты:</small>

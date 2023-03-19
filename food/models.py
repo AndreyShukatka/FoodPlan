@@ -1,6 +1,10 @@
+from datetime import datetime
+
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
+
+from dateutil.relativedelta import relativedelta
 
 
 class Menu(models.Model):
@@ -64,6 +68,26 @@ class Category(models.Model):
         return self.name
 
 
+class OrderManager(models.Manager):
+    def check_active_order(self):
+        paid_orders = self.filter(paid=True)
+        for order in paid_orders:
+            last_day_order = order.payment_date + relativedelta(months=int(order.subscription.period))
+            if datetime.now().date() < last_day_order:
+                return True
+        return False
+
+    def active_order(self):
+        paid_orders = self.filter(paid=True)
+        print("!")
+        for order in paid_orders:
+            last_day_order = order.payment_date + relativedelta(months=int(order.subscription.period))
+            if datetime.now().date() < last_day_order:
+                print(order)
+                return order
+        return False
+
+
 class Order(models.Model):
     user = models.ForeignKey(
         User,
@@ -108,6 +132,7 @@ class Order(models.Model):
             MaxValueValidator(6)
         ]
     )
+    objects = OrderManager()
 
     class Meta:
         verbose_name = 'Заказ'
@@ -154,11 +179,14 @@ class Recipe(models.Model):
         verbose_name='Изображение',
         blank=True,
         null=True,
-        upload_to='images',
+        upload_to='dishes',
+    )
+    preview_text = models.TextField(
+        'Краткое описание',
+        blank=True
     )
     description = models.TextField(
         'Описание',
-        max_length=200,
         blank=True
     )
     menu = models.ForeignKey(

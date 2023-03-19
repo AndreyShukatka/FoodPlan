@@ -9,7 +9,7 @@
                 <a class="navbar-brand" href="{% url 'index' %}">
                     <img src="{% static 'img/logo.8d8f24edbb5f.svg' %}" height="55" width="189" alt="">
                 </a>
-                <h3 class="text-secondary mt-2 me-2">Стоимость: 00000₽</h3>
+                <h3 class="text-secondary mt-2 me-2">Стоимость: <span id="price">100</span> ₽</h3>
                 <button type="submit" class="btn shadow-none btn-sm btn-outline-success foodplan_green foodplan__border_green">Оплатить</button>
             </div>
         </nav>
@@ -42,9 +42,9 @@
                         <tr>
                             <th scope="row" class="text-start">Срок</th>
                             <td>
-                                <select class="form-select" name="subscription">
+                                <select id="subscription" class="form-select" name="subscription" onchange="updatePriceValue(this)">
                                   {% for subscription in subscriptions %}
-                                    <option value="{{ subscription.pk }}">{{ subscription.get_period_display }}</option>
+                                    <option value="{{ subscription.pk }}" data-price="{{ subscription.price }}">{{ subscription.get_period_display }}</option>
                                   {% endfor %}
                                 </select>
                             </td>
@@ -77,12 +77,6 @@
                 </table>
                 <button type="submit" id="TableSubmit" class="d-none"></button>
 
-
-                <!-- <form class="card d-flex flex-row align-items-baseline mb-5 p-3 foodplan__bg_grey">
-                    <label for="exampleInputPassword1" class="form-label me-2">Промокод</label>
-                    <input type="password" class="form-control me-2" id="password">
-                    <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Применить</button>
-                </form> -->
                 <div class="d-flex justify-content-center my-5">
                     <button form="order" type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green w-50">Оплатить</button>
                 </div>
@@ -91,6 +85,13 @@
         </section>
     </main>
     </form>
+    <script>
+      var e = document.getElementById("subscription");
+      function updatePriceValue(e) {
+        var price = e.options[e.selectedIndex].getAttribute("data-price");
+        document.getElementById("price").innerHTML = price;
+      }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>

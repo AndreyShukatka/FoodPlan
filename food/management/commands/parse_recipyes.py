@@ -89,10 +89,12 @@ def download_img(url, folder):
     img_path = os.path.join(folder, file_name)
     with open(img_path, 'wb') as file:
         file.write(response.content)
+    img_path = os.path.join('/dishes/', file_name)
     return img_path
 
 def main():
-    dinner_urls_page = 'https://1000.menu/catalog/lyogkii-ujin?ms=1&str=&cat_es_inp%5B%5D=10090&es_tf=0&es_tt=14&es_cf=0&es_ct=2000'
+    # dinner_urls_page = 'https://1000.menu/catalog/lyogkii-ujin?ms=1&str=&cat_es_inp%5B%5D=10090&es_tf=0&es_tt=14&es_cf=0&es_ct=2000'
+    dinner_urls_page = 'https://1000.menu/catalog/zvanji-uzhin'
 
     response = requests.get(dinner_urls_page)
     dishes_urls = parse_resipy_page_urls(response)
@@ -102,7 +104,7 @@ def main():
         dish_info, dish_name = parse_resipy_page(response)
         all_dishes[dish_name] = dish_info
 
-    folder = 'imges'
+    folder = 'media/dishes'
     for dish in all_dishes:
         name = dish
         calories = all_dishes[dish]['call']
@@ -111,10 +113,13 @@ def main():
         img_path = download_img(img_url, folder)
 
 
-        recepy_text = str()
-        for cooking_step in all_dishes[dish]['recipy']:
-
-            recepy_text = recepy_text + '\n' + all_dishes[dish]['recipy'][cooking_step]
+        recepy_text = ''
+        for step_index, cooking_step in enumerate(all_dishes[dish]['recipy']):
+            if step_index == 0:
+                recepy_text = f'{recepy_text} <p>{all_dishes[dish]["recipy"][cooking_step]}</p>'
+                recepy_prev_text = all_dishes[dish]['recipy'][cooking_step]
+            else:
+                recepy_text = f'{recepy_text} <p>{step_index}. {all_dishes[dish]["recipy"][cooking_step]}</p>'
 
         for one_dish in all_dishes[dish]['ingridients']:
             ingredient_name = one_dish
@@ -123,32 +128,35 @@ def main():
                 ingredient_quantity = float(all_dishes[dish]['ingridients'][one_dish]['count'])
             except ValueError:
                 ingredient_quantity = 0
-
-
-
 
         recipe, created = Recipe.objects.get_or_create(
             name=name,
-            description=recepy_text,
             calories=calories,
-            image = img_path
         )
 
-        menu = Menu.objects.order_by('?')[0]
-        category = Category.objects.order_by('?')[0]
-        recipe.menu = menu
-        recipe.category = category
-        recipe.save()
-        for one_dish in all_dishes[dish]['ingridients']:
-            ingredient_name = one_dish
-            ingredient_unit = all_dishes[dish]['ingridients'][one_dish]['unit']
-            try:
-                ingredient_quantity = float(all_dishes[dish]['ingridients'][one_dish]['count'])
-            except ValueError:
-                ingredient_quantity = 0
+        if created:
+            menu = Menu.objects.order_by('?')[0]
+            category = Category.objects.get(name='Ужины')
+            recipe.description = recepy_text
+            recipe.preview_text = recepy_prev_text
+            recipe.menu = menu
+            recipe.image = img_path
+            recipe.category.add(category)
+            recipe.save()
+            for one_dish in all_dishes[dish]['ingridients']:
+                ingredient_name = one_dish
+                ingredient_unit = all_dishes[dish]['ingridients'][one_dish]['unit']
+                try:
+                    ingredient_quantity = float(all_dishes[dish]['ingridients'][one_dish]['count'])
+                except ValueError:
+                    ingredient_quantity = 0
 
-
-            recipe.ingredient.create(name=ingredient_name, unit = ingredient_unit ,quantity = ingredient_quantity)
+                recipe.ingredient.create(name=ingredient_name, unit = ingredient_unit ,quantity = ingredient_quantity)
+        else:
+            recipe.preview_text = recepy_prev_text
+            recipe.description = recepy_text
+            recipe.image = img_path
+            recipe.save()
 
 class Command(BaseCommand):
     help = 'Start parse recipes'

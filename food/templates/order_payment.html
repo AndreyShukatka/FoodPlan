@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+ <div class="container">
+    <div class="d-flex w-50 py-lg-5 foodplan__head">
+        <div class="d-flex flex-column justify-content-start foodplan__head_desc">
+            {% if order %}
+            <h1 class="mb-5"><b>Вы уверены, что хотите оплатить ваш заказ?</b></h1>
+            <ul>
+              <li>Меню: {{ order.menu_type.name }}</li>
+              <li>Период: {{ order.subscription.get_period_display }}</li>
+              <li>Категории:
+                <ul>
+                {% for category in order.category.all %}
+                  <li>{{ category }}</li>
+                {% endfor %}
+                </ul>
+              </li>
+              <li>Количество персон: {{ order.person_count }}</li>
+              <li>Стоимость: {{ order.subscription.price }} ₽</li>
+            </ul>
+            <div class="d-block mt-3">
+                <a href="{% url 'success_payment' pk=order.pk %}" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Подтвердить</a>
+                <a href="{% url 'order' %}" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Изменить</a>
+            </div>
+            {% else %}
+            <h1 class="mb-5"><b>Эта часть сайта находится в разработке</b></h1>
+            <div class="d-block mt-3">
+                {% if user.is_authenticated %}
+                    <form action="{% url 'order' %}">
+                {% else %}
+                    <form action="{% url 'login' %}">
+                {% endif %}
+                <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Хочу попробовать</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
