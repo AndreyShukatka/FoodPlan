@@ -20,7 +20,7 @@
                                 <small class="link-secondary">Ингредиенты:</small>
                                 <ul class="list-group list-group-flush">
                                     {% for ingredient in recipe.ingredient.all %}
-                                    <li class="list-group-item disabled"><small>{{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }}.)</small></li>
+                                    <li class="list-group-item disabled"><small>{{ ingredient.name }} ({% if ingredient.quantity != 0 %}{{ ingredient.quantity }} {% endif %}{{ ingredient.unit }})</small></li>
                                     {% endfor %}
                                 </ul>
                                 <small class="link-secondary">Общая калорийность: {{ recipe.calories }} ккал</small>
