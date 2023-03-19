@@ -65,7 +65,7 @@
                         <div class="carousel-inner">
                             {% for dish in free_dishes%}
                                 {% if  forloop.first %}
-                                    <a href="{% url 'card' dish.id %}" class="carousel-item active">
+                                    <div class="carousel-item active">
                                 {% else %}
                                     <a href="{% url 'card' dish.id %}" class="carousel-item ">
                                 {% endif %}
@@ -74,7 +74,7 @@
                                             <h5><b>Наши бесплатные рецепты</b></h5>
                                             <h2><b>{{ dish.name }}</b></h2>
                                         </div>
-                                    </a>
+                                    </div>
                             {% endfor %}
                         </div>
                         <button class="carousel-control-prev carousel__button_prev" type="button" data-bs-target="#carousel1"
