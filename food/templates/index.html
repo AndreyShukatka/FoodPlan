@@ -1,1 +1,201 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<main style="margin-top: calc(2rem + 85px);">
+        <section class="foodplan__head_bg">
+            <div class="container">
+                <div class="d-flex w-50 py-lg-5 foodplan__head">
+                    <div class="d-flex flex-column justify-content-start foodplan__head_desc">
+                        <h1 class="mb-5"><b>Вдохновляем готовить дома!</b></h1>
+                        <h4>Мы планируем домашнее меню.<br>
+                            Вы получаете рецепты + список продуктов.<br>
+                            Больше не нужно думать, что готовить.</h4>
+                        <div class="d-block mt-3">
+                            {% if user.is_authenticated %}
+                                <form action="{% url 'order' %}">
+                            {% else %}
+                                <form action="{% url 'login' %}">
+                            {% endif %}
+                            <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Хочу попробовать</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="container my-5">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card mb-1 foodplan__card_borderless">
+                            <img src="{% static 'img/circle1.png' %}" class="card-img-top" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Меню на неделю</b></h5>
+                                <p class="card-text">Итальянская паста, котлеты с пюре или овощное карри - решать вам!
+                                Подстраивайте меню под свои желания.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card mb-1 foodplan__card_borderless">
+                            <img src="{% static 'img/circle2.png' %}" class="card-img-top" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Удобный список продуктов</b></h5>
+                                <p class="card-text">С четким списком вы не возьмете лишнего, будете тратить меньше и сможете чаще покупать лосось и морепродукты.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card mb-1 foodplan__card_borderless">
+                            <img src="{% static 'img/circle3.png' %}" class="card-img-top" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Доставка от ВкусВилл</b></h5>
+                                <p class="card-text">Заказывайте доставку продуктов по вашему списку в 1 клик. Все ингредиенты попадут в корзину ВкусВилл автоматически.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="container my-5">
+                <h1 class="text-center my-4"><b>В каждом меню только хиты</b></h1>
+                <div class="container w-md-75">
+                    <div id="carousel1" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for dish in free_dishes%}
+                                {% if  forloop.first %}
+                                    <div class="carousel-item active">
+                                {% else %}
+                                    <div class="carousel-item ">
+                                {% endif %}
+                                        <img src={{dish.image.url}} class="d-block w-100" alt="...">
+                                        <div class="card-img-overlay text-white text-center carousel-item__gradient">
+                                            <h5><b>Наши бесплатные рецепты</b></h5>
+                                            <h2><b>{{ dish.name }}</b></h2>
+                                        </div>
+                                    </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev carousel__button_prev" type="button" data-bs-target="#carousel1"
+                            data-bs-slide="prev">
+                            <span class="foodplan_green" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left-circle carousel__svg_prev"
+                                    viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+                                </svg>
+                            </span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next carousel__button_next" type="button" data-bs-target="#carousel1"
+                            data-bs-slide="next">
+                            <span class="foodplan_green" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-right-circle carousel__svg_next"
+                                    viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"></path>
+                                </svg>
+                            </span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <section>
+            <div class="container my-5">
+                <div class="container w-md-75 foodplan__mobapp">
+                    <div class="d-flex w-md-50 flex-column align-items-center justify-content-between foodplan__mobapp_desc">
+                        <h1 class="py-5"><b>Пользуйтесь, как вам удобно</b></h1>
+                        <h4>Открывайте меню в мобильном приложении, на компьютере, планшете, или распечатывайте на принтере.</h4>
+                        <h4>Создавайте свою личную коллекцию избранных рецептов.</h4>
+                        <div class="d-block py-5">
+                            <form action="{% url 'stub' %}" id="strub"></form>
+                            <button form="strub" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green me-2 mb-2">Загрузите в App
+                                Store</button>
+                            <button form="strub" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green me-2 mb-2">Загрузите в Google
+                                Play</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <section>
+            <div class="container mb-5">
+                <div class="row">
+                    <div class="col-12 col-sm-4">
+                        <div class="foodplan__creator pounded-pill" style="height: 300px;">
+                            <img src="{% static 'img/avatar.jpg' %}" class="d-block w-100" alt="...">
+                        </div>
+                        <h5 class="text-center">Марина Амельченко</h5>
+                        <h6 class="text-center">Основатель Foodplan</h6>
+                    </div>
+                    <div class="col-12 col-sm-8">
+                        <h1 class="mb-4">,,</h1>
+                        <h4>Каждую неделю мы создаем меню с любовью и заботой. Поэтому нам доверяют более 30 000 семей.</h4>
+                        <h4>Начните путешествие в мир новых вкусов с нами.</h4>
+                        <h1 style="text-align: end;">,,</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="container mb-5">
+                <h1 class="mb-3 text-center"><strong>Истории наших пользователей</strong></h1>
+                <div class="row">
+                    <div class="card col-12 col-sm-6 col-lg-3 foodplan__card_borderless">
+                        <img src="{% static 'img/IMG_1899.jpg' %}" alt="" class="foodplan__story">
+                    </div>
+                    <div class="card col-12 col-sm-6 col-lg-3 foodplan__card_borderless">
+                        <img src="{% static 'img/IMG_1900.jpg' %}" alt="" class="foodplan__story">
+                    </div>
+                    <div class="card col-12 col-sm-6 col-lg-3 foodplan__card_borderless">
+                        <img src="{% static 'img/IMG_1901.jpg' %}" alt="" class="foodplan__story">
+                    </div>
+                    <div class="card col-12 col-sm-6 col-lg-3 foodplan__card_borderless">
+                        <img src="{% static 'img/IMG_1902.jpg' %}" alt="" class="foodplan__story">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="container mb-5">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="d-flex flex-row justify-content-between m-1">
+                            <img src="{% static 'img/union-left.svg' %}" alt="" class="logo1">
+                            <div class="d-flex flex-column align-items-center text-center justify-content-center">
+                                <h5>Выпускник Сбербанк 500 Startups</h5>
+                                <h5>Moscow</h5>
+                            </div>
+                            <img src="{% static 'img/union-right.svg' %}" alt="" class="logo1">
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="d-flex flex-row justify-content-between m-1">
+                            <img src="{% static 'img/union-left.svg' %}" alt="" class="logo1">
+                            <div class="d-flex flex-column align-items-center text-center justify-content-center">
+                                <h5>Диплом повара Le Cordon Bleu</h5>
+                                <h5>London</h5>
+                            </div>
+                            <img src="{% static 'img/union-right.svg' %}" alt="" class="logo1">
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="d-flex flex-row justify-content-between m-1">
+                            <img src="{% static 'img/union-left.svg' %}" alt="" class="logo1">
+                            <div class="d-flex flex-column align-items-center text-center justify-content-center">
+                                <h5>При поддержке Austrian Angel Investors</h5>
+                                <h5>Vienna</h5>
+                            </div>
+                            <img src="{% static 'img/union-right.svg' %}" alt="" class="logo1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    {% endblock content %}

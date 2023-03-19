@@ -16,7 +16,10 @@ from dateutil.relativedelta import relativedelta
 
 
 def index(request):
-    return render(request, "index.html")
+    free_dishes = Recipe.objects.filter(free=True)
+    data = {'free_dishes':free_dishes}
+    return render(request, "index.html", context=data)
+
 
 
 def registrated(request):
@@ -141,6 +144,8 @@ def detailprofile(request):
         form = UserProfileForm(instance=request.user)
     return render(request, 'lk.html', {'form': form, 'details': get_detail_order(request)})
 
+
+
 def get_detail_order(request):
     try:
         order = Order.objects.get(user=request.user)
@@ -166,6 +171,7 @@ def get_detail_order(request):
         detail_order = None
     return detail_order
 
+
 class UserPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
     """
     Изменение пароля пользователя
@@ -181,3 +187,4 @@ class UserPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
 
     def get_success_url(self):
         return reverse_lazy('lk')
+
