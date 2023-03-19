@@ -65,16 +65,16 @@
                         <div class="carousel-inner">
                             {% for dish in free_dishes%}
                                 {% if  forloop.first %}
-                                    <div class="carousel-item active">
+                                    <a href="{% url 'card' dish.id %}" class="carousel-item active">
                                 {% else %}
-                                    <div class="carousel-item ">
+                                    <a href="{% url 'card' dish.id %}" class="carousel-item ">
                                 {% endif %}
                                         <img src={{dish.image.url}} class="d-block w-100" alt="...">
                                         <div class="card-img-overlay text-white text-center carousel-item__gradient">
                                             <h5><b>Наши бесплатные рецепты</b></h5>
                                             <h2><b>{{ dish.name }}</b></h2>
                                         </div>
-                                    </div>
+                                    </a>
                             {% endfor %}
                         </div>
                         <button class="carousel-control-prev carousel__button_prev" type="button" data-bs-target="#carousel1"
