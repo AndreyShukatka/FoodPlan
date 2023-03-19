@@ -110,10 +110,13 @@ def get_all_cards(request):
             'categories': []
         }
         for category in user_order.category.all():
-            recipe = Recipe.objects.filter(
-                menu=user_order.menu_type,
-                category=category
-            ).order_by('?')[0]
+            if Recipe.objects.filter(category=category):
+                recipe = Recipe.objects.filter(
+                    menu=user_order.menu_type,
+                    category=category
+                ).order_by('?')[0]
+            else:
+                continue
             days[day]['categories'].append(recipe)
     recipes = Recipe.objects.filter(
         menu=user_order.menu_type,
